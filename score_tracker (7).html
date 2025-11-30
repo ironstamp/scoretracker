@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            flex-direction: column;
+            max-height: 95vh;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 36px;
+        }
+        
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .header-section h1 {
+            margin-bottom: 0;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .reset-all-btn {
+            padding: 12px 25px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        
+        .reset-all-btn:hover {
+            background: #ee5a52;
+        }
+        
+        .reset-all-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .input-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .add-btn {
+            padding: 12px 25px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .add-btn:hover {
+            background: #5568d3;
+        }
+        
+        .add-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .csv-section {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .csv-label {
+            display: block;
+            font-size: 14px;
+            color: #666;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        #csvFile {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        #csvFile::-webkit-file-upload-button {
+            padding: 8px 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 10px;
+            transition: background 0.3s;
+        }
+        
+        #csvFile::-webkit-file-upload-button:hover {
+            background: #5568d3;
+        }
+        
+        .people-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 10px;
+        }
+        
+        .people-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .people-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .people-list::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+        
+        .people-list::-webkit-scrollbar-thumb:hover {
+            background: #5568d3;
+        }
+        
+        .person-card {
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-left: 5px solid #667eea;
+            gap: 8px;
+            min-height: 80px;
+        }
+        
+        .person-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .person-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            word-break: break-word;
+        }
+        
+        .person-score-container {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .person-score {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            min-width: 70px;
+            text-align: center;
+            line-height: 1;
+        }
+        
+        .score-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px;
+            width: 70px;
+            height: 70px;
+        }
+        
+        .increment-btn {
+            flex: 1;
+            padding: 0;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 2px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .increment-btn:hover {
+            background: #218838;
+        }
+        
+        .increment-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .decrement-btn {
+            flex: 1;
+            padding: 0;
+            background: #ffc107;
+            color: white;
+            border: none;
+            border-radius: 2px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .decrement-btn:hover {
+            background: #e0a800;
+        }
+        
+        .decrement-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .remove-btn {
+            flex: 1;
+            padding: 0;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+            font-size: 12px;
+            width: 100%;
+            height: 100%;
+            grid-column: 1 / -1;
+        }
+        
+        .remove-btn:hover {
+            background: #c82333;
+        }
+        
+        .toggle-input-btn {
+            padding: 8px 15px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background 0.3s;
+            margin-bottom: 12px;
+        }
+        
+        .toggle-input-btn:hover {
+            background: #5a6268;
+        }
+        
+        .timer-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .timer-display {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+            min-width: 80px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .timer-controls {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        
+        .timer-input {
+            width: 45px;
+            padding: 6px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .timer-btn {
+            padding: 6px 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+        }
+        
+        .timer-btn:hover {
+            background: #5568d3;
+        }
+        
+        .timer-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .timer-btn.active {
+            background: #ff6b6b;
+        }
+        
+        .timer-btn.active:hover {
+            background: #ee5a52;
+        }
+        
+        .input-section.collapsed {
+            display: none;
+        }
+        
+        .csv-section.collapsed {
+            display: none;
+        }
+        
+        .empty-message {
+            text-align: center;
+            color: #999;
+            padding: 40px 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-section">
+            <h1>Score Tracker</h1>
+            <div class="timer-section">
+                <div class="timer-display" id="timerDisplay">1:00</div>
+                <div class="timer-controls">
+                    <select id="timerPreset" class="timer-input">
+                        <option value="30">30s</option>
+                        <option value="60" selected>1:00</option>
+                        <option value="90">1:30</option>
+                        <option value="120">2:00</option>
+                        <option value="300">5:00</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                    <input type="number" id="timerMinutes" min="0" max="59" value="1" class="timer-input" style="display: none;">
+                    <button class="timer-btn" onclick="startTimer()">Start</button>
+                    <button class="timer-btn" onclick="pauseTimer()">Pause</button>
+                    <button class="timer-btn" onclick="resetTimer()">Reset</button>
+                </div>
+            </div>
+            <button class="reset-all-btn" onclick="resetAllScores()">Reset All</button>
+        </div>
+        
+        <button class="toggle-input-btn" onclick="toggleInputSection()">Hide Add People</button>
+        
+        <div class="input-section">
+            <input 
+                type="text" 
+                id="nameInput" 
+                placeholder="Enter person's name..."
+                onkeypress="handleKeyPress(event)"
+            >
+            <button class="add-btn" onclick="addPerson()">Add</button>
+        </div>
+        
+        <div class="csv-section">
+            <label for="csvFile" class="csv-label">Or import from CSV:</label>
+            <input 
+                type="file" 
+                id="csvFile" 
+                accept=".csv" 
+                onchange="handleCSVUpload(event)"
+            >
+        </div>
+        
+        <div id="peopleList" class="people-list">
+            <div class="empty-message">Add a person to get started!</div>
+        </div>
+    </div>
+
+    <script>
+        let people = [];
+        let inputSectionCollapsed = false;
+        let timerInterval = null;
+        let timerSeconds = 60;
+        let timerRunning = false;
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timerSeconds / 60);
+            const seconds = timerSeconds % 60;
+            const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('timerDisplay').textContent = display;
+        }
+
+        function startTimer() {
+            if (timerRunning) return;
+            
+            const preset = document.getElementById('timerPreset').value;
+            if (preset === 'custom') {
+                const minutes = parseInt(document.getElementById('timerMinutes').value) || 1;
+                timerSeconds = minutes * 60;
+            } else {
+                timerSeconds = parseInt(preset);
+            }
+            timerRunning = true;
+            
+            document.querySelector('.timer-btn:nth-of-type(1)').classList.add('active');
+            document.getElementById('timerPreset').disabled = true;
+            
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                updateTimerDisplay();
+                
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    timerRunning = false;
+                    document.querySelector('.timer-btn:nth-of-type(1)').classList.remove('active');
+                    document.getElementById('timerPreset').disabled = false;
+                    alert('Time is up!');
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                timerRunning = false;
+                document.querySelector('.timer-btn:nth-of-type(1)').classList.remove('active');
+                document.getElementById('timerPreset').disabled = false;
+            }
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            const preset = document.getElementById('timerPreset').value;
+            if (preset === 'custom') {
+                const minutes = parseInt(document.getElementById('timerMinutes').value) || 1;
+                timerSeconds = minutes * 60;
+            } else {
+                timerSeconds = parseInt(preset);
+            }
+            updateTimerDisplay();
+        }
+        
+        function toggleCustomTimer() {
+            const preset = document.getElementById('timerPreset').value;
+            const customInput = document.getElementById('timerMinutes');
+            if (preset === 'custom') {
+                customInput.style.display = 'block';
+            } else {
+                customInput.style.display = 'none';
+            }
+        }
+        
+        // Set up event listener for preset dropdown
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('timerPreset').addEventListener('change', toggleCustomTimer);
+        });
+
+        function toggleInputSection() {
+            const inputSection = document.querySelector('.input-section');
+            const csvSection = document.querySelector('.csv-section');
+            const toggleBtn = document.querySelector('.toggle-input-btn');
+            
+            inputSectionCollapsed = !inputSectionCollapsed;
+            
+            if (inputSectionCollapsed) {
+                inputSection.classList.add('collapsed');
+                csvSection.classList.add('collapsed');
+                toggleBtn.textContent = 'Show Add People';
+            } else {
+                inputSection.classList.remove('collapsed');
+                csvSection.classList.remove('collapsed');
+                toggleBtn.textContent = 'Hide Add People';
+            }
+        }
+
+        function addPerson() {
+            const input = document.getElementById('nameInput');
+            const name = input.value.trim();
+            
+            if (name === '') {
+                alert('Please enter a name');
+                return;
+            }
+            
+            people.push({
+                id: Date.now(),
+                name: name,
+                score: 0
+            });
+            
+            input.value = '';
+            input.focus();
+            renderList();
+        }
+
+        function incrementScore(id) {
+            const person = people.find(p => p.id === id);
+            if (person) {
+                person.score++;
+                renderList();
+            }
+        }
+
+        function decrementScore(id) {
+            const person = people.find(p => p.id === id);
+            if (person && person.score > 0) {
+                person.score--;
+                renderList();
+            }
+        }
+
+        function removePerson(id) {
+            people = people.filter(p => p.id !== id);
+            renderList();
+        }
+
+        function resetAllScores() {
+            if (confirm('Are you sure you want to reset all scores to 0?')) {
+                people.forEach(person => person.score = 0);
+                renderList();
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                addPerson();
+            }
+        }
+
+        function renderList() {
+            const listContainer = document.getElementById('peopleList');
+            
+            if (people.length === 0) {
+                listContainer.innerHTML = '<div class="empty-message">Add a person to get started!</div>';
+                return;
+            }
+            
+            // Sort by score (descending), then by name (alphabetically)
+            const sortedPeople = [...people].sort((a, b) => {
+                if (b.score !== a.score) {
+                    return b.score - a.score;
+                }
+                return a.name.localeCompare(b.name);
+            });
+            
+            listContainer.innerHTML = sortedPeople.map(person => `
+                <div class="person-card">
+                    <div class="person-info">
+                        <div class="person-name">${escapeHtml(person.name)}</div>
+                    </div>
+                    <div class="person-score-container">
+                        <div class="person-score">${person.score}</div>
+                        <div class="score-controls">
+                            <button class="decrement-btn" onclick="decrementScore(${person.id})">-1</button>
+                            <button class="increment-btn" onclick="incrementScore(${person.id})">+1</button>
+                            <button class="remove-btn" onclick="removePerson(${person.id})">Rem</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function handleCSVUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const csv = e.target.result;
+                const lines = csv.trim().split('\n');
+                let addedCount = 0;
+                
+                lines.forEach(line => {
+                    // Handle both quoted and unquoted values
+                    let name = line.trim();
+                    
+                    // Remove surrounding quotes if present
+                    if ((name.startsWith('"') && name.endsWith('"')) || 
+                        (name.startsWith("'") && name.endsWith("'"))) {
+                        name = name.slice(1, -1);
+                    }
+                    
+                    // Skip empty lines and the header row (common headers: "Name", "name", etc.)
+                    if (name && name.toLowerCase() !== 'name') {
+                        people.push({
+                            id: Date.now() + addedCount,
+                            name: name,
+                            score: 0
+                        });
+                        addedCount++;
+                    }
+                });
+                
+                if (addedCount > 0) {
+                    alert(`Added ${addedCount} person${addedCount !== 1 ? 's' : ''} from CSV`);
+                    document.getElementById('csvFile').value = '';
+                    renderList();
+                } else {
+                    alert('No valid names found in CSV');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Initial render
+        renderList();
+    </script>
+</body>
+</html>
