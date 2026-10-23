@@ -2,13 +2,13 @@
 
 A free, browser-based score tracker designed for classroom use — particularly for projecting live scores during activities, competitions, or team games.
 
-**[Try it live →](https://yourusername.github.io/score-tracker)**
+**[Try it live →](https://ironstamp.github.io/scoretracker)**
 
 ---
 
 ## What is it?
 
-A simple, fullscreen-friendly tool for tracking individual or team scores in real time. Add names manually or import a class list from a CSV file, then tap each name to add a point. Designed to look great on a projector.
+A simple, fullscreen-friendly tool for tracking individual or team scores in real time. Add names manually or import a class list from a CSV file, then use the **+1** and **−1** buttons to keep score. The list re-sorts itself so the leader is always at the top. Designed to look great on a projector.
 
 ---
 
@@ -16,11 +16,12 @@ A simple, fullscreen-friendly tool for tracking individual or team scores in rea
 
 - **Add names manually** — type a name and press Enter or click Add
 - **CSV import** — upload a class list CSV to load all names at once
-- **One-tap scoring** — click any name card to increment their score by 1
-- **Projection layout** — grid layout with large text, readable from across a classroom
-- **Responsive grid** — automatically adjusts columns to fit everyone on screen
-- **Reset individual scores** — remove or reset any student without clearing the whole class
-- **Reset all scores** — one-click reset of all scores at the start of a new round
+- **+1 / −1 buttons** — adjust any score up or down (scores never go below zero)
+- **Live leaderboard** — highest score at the top, ties sorted alphabetically
+- **Countdown timer** — 30 s, 1, 1½, 2 or 5 minutes, or a custom number of minutes, with Start / Pause / Reset and a pop-up when time's up
+- **Hide Add People** — collapse the entry panel so the scores fill the screen
+- **Remove a person** — take someone off the list without affecting the others
+- **Reset all scores** — set everyone back to zero at the start of a new round
 - **No installation** — runs entirely in the browser, nothing to install or log in to
 
 ---
@@ -31,28 +32,27 @@ A simple, fullscreen-friendly tool for tracking individual or team scores in rea
 
 **Manually:** Type a name in the input field and press **Enter** or click **Add**.
 
-**From CSV:** Click **Upload CSV** and select a file. The CSV should have one name per row — either a single column of names, or firstname and lastname in separate columns (they will be joined automatically).
+**From CSV:** Choose a file under **Or import from CSV**. Put one name per line. A header row of `Name` is skipped, and quotes around names are removed.
 
 Example CSV format:
 ```
-Alice
-Bob
-Charlie
+Name
+Alice Smith
+Bob Jones
+Charlie Brown
 ```
-or
-```
-Alice,Smith
-Bob,Jones
-Charlie,Brown
-```
+
+Each whole line becomes one name, so put first and last names in the same cell (`Alice Smith`, not `Alice,Smith`).
 
 ### During an activity
 
-Click a student's card to add 1 point to their score. The score updates immediately and is visible to the class on the projector.
+Click **+1** to add a point or **−1** to take one away. The leaderboard re-orders immediately.
+
+To time a round, choose a duration from the timer menu and click **Start**. **Pause** stops the clock; **Reset** puts it back.
 
 ### Resetting
 
-- **Remove a student** — click the ✕ on their card
+- **Remove a student** — click **Rem** on their card
 - **Reset all scores to zero** — click the **Reset All** button (a confirmation dialog will appear)
 
 ---
@@ -79,4 +79,15 @@ Free to use, share, and adapt for educational purposes.
 
 ---
 
-*Created by a mathematics teacher at St Paul's Collegiate School, Hamilton, New Zealand.*
+---
+
+## More classroom tools
+
+- [Classroom Manager](https://ironstamp.github.io/classroom-tool): post, schedule and copy Google Classroom courses
+- [Group Allocator](https://ironstamp.github.io/group-picker): randomly split a class into groups
+- [Tarsia Puzzle Generator](https://ironstamp.github.io/tarsia-generator): printable triangle-matching puzzles
+- [Domino Chain Puzzle Generator](https://ironstamp.github.io/domino-puzzle-generator): printable domino-chain matching cards
+
+---
+
+*Made by Paul Carter, mathematics teacher, New Zealand.*
